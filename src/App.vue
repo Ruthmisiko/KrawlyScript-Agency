@@ -28,7 +28,7 @@
           </button>
         </div>
       </div>
-      <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
+      
       <ul
         :class="showMenu ? 'flex' : 'hidden'"
         class="flex-col items-end mt-8 space-y-4 md:flex md:space-y-0 md:flex-row md:items-center md:space-x-10 md:mt-0"
@@ -44,7 +44,7 @@
        
       </ul>
     </nav>
-    <!-- End Navbar -->
+   
 
     <div class="flex items-center">
       <div class="w-11/12 space-y-5 md:space-y-10">
@@ -223,23 +223,22 @@
     </div>
   </div>
   <div class="contact-container" id="contact">
-            <!-- Form Section -->
-            <div class="form-section">
-                <a href="#" class="connect-button">LET'S CONNECT</a>
-                <h1>We're here to help</h1>
-                <form action="mailto:assignmentssolutions22@gmail.com">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Enter your Name" required>
-    
-                    <label for="email">Email</label>
-                    <input type="email" id="email" placeholder="Enter a valid email address" required>
-    
-                    <label for="message">Message</label>
-                    <textarea id="message" rows="5" placeholder="Enter your message" required></textarea>
-    
-                    <button style="background-color: #007BFF;">SUBMIT</button>
-                </form>
-            </div>
+    <div class="form-section">
+        <a href="#" class="connect-button">LET'S CONNECT</a>
+        <h1>We're here to help</h1>
+        <form @submit.prevent="submitForm">
+          <label for="name">Name</label>
+          <input type="text" id="name" v-model="formData.name" placeholder="Enter your Name" required>
+
+          <label for="email">Email</label>
+          <input type="email" id="email" v-model="formData.email" placeholder="Enter a valid email address" required>
+
+          <label for="message">Message</label>
+          <textarea id="message" rows="5" v-model="formData.message" placeholder="Enter your message" required></textarea>
+
+          <button type="submit" style="background-color: #007BFF;">SUBMIT</button>
+        </form>
+      </div>
     
             <!-- Image Section -->
             <div class="image-section">
@@ -261,16 +260,12 @@
         <button
           class="bg-gray-700 p-2 font-semibold text-white inline-flex items-center space-x-2 rounded"
         >
-          <svg
-            class="w-4 h-4 md:w-10 md:h-10 lg:w-10 lg:h-10 xl:h-10 xl:w-10 fill-current"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-            />
-          </svg>
+        <a href="https://wa.me/0713631923" target="_blank" class="whatsapp-button">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="40">
+
+</a>
+         
+          
         </button>
 
         <button
@@ -343,11 +338,41 @@
   <p style="text-align: center;">&copy;  Designed by KrawlyScript Agency</p>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        showMenu: false,
+export default {
+  data() {
+    return {
+      showMenu: false,
+      formData: {
+        name: '',
+        email: '',
+        message: '',
+      },
+    };
+  },
+  methods: {
+    async submitForm() {
+      try {
+        // Send the form data to your backend or third-party service
+        const response = await fetch('https://your-backend-url.com/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.formData),
+        });
+
+        if (response.ok) {
+          alert('Message sent successfully!');
+          this.formData = { name: '', email: '', message: '' }; // Reset form
+        } else {
+          alert('Failed to send message. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
       }
     },
-  }
+  },
+};
 </script>
+
